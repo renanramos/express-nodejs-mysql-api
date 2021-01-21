@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const quotes = require('../services/quotes');
+const { ErrorHandler } = require('../helpers/error');
 
 /* GET quotes listing. */
 router.get('/', async function(req, res, next) {
@@ -15,7 +16,11 @@ router.get('/', async function(req, res, next) {
 
 router.get('/:quoteId', async function(req, res, next) {
   try {
-    res.json(await quotes.getQuoteById(req.params.quoteId))
+    quote = await quotes.getQuoteById(req.params.quoteId);
+    if (!quote.data.length) {
+      throw new ErrorHandler(404, 'Citação não localizada');    
+    }
+    res.json(quote)
   } catch (error) {
     next(error);
   }

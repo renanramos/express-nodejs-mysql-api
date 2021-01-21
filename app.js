@@ -1,8 +1,8 @@
 const express = require('express');
-const path = require('path');
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 const cors = require('cors');
+const { handleError } = require('./helpers/error');
 
 const indexRouter = require('./routes/index');
 const quotesRouter = require('./routes/quotes');
@@ -17,5 +17,6 @@ app.use(cors());
 
 app.use('/', indexRouter);
 app.use('/quotes', quotesRouter);
+app.use((err, req, res, next) => handleError(err, res));
 
 module.exports = app;
